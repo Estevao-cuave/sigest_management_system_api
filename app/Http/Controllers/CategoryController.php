@@ -6,6 +6,8 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use Exception;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -17,60 +19,71 @@ class CategoryController extends Controller
         $this->categoryRepo = $categoryRepo;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function addCategory(StoreCategoryRequest $request)
     {
-        $categories = $this->categoryRepo->list();
-        return response()->json($categories);
+        try {
+            $category = $this->categoryRepo->store(
+                [
+                    "name" => $request->name
+                ]
+            );
+            return response()->json($category, 200);
+        } catch (Exception $e) {
+            return response()->json(["message" => "Error Processing Request!"], 500);
+
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getCategories()
     {
-        //
+        try {
+            $categories = $this->categoryRepo->list();
+            return response()->json($categories);
+        } catch (Exception $e) {
+            return response()->json(["message" => "Error Processing Request!"], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCategoryRequest $request)
+    public function getCategory($id)
     {
-        //
+        try {
+            $category = $this->categoryRepo->getById($id);
+            return response()->json($category);
+        } catch (Exception $e) {
+            return response()->json(["message" => "Error Processing Request!"], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
+    public function updateCategory(UpdateCategoryRequest $request, $id)
     {
-        //
+        try {
+            $category = $this->categoryRepo->getById($id);
+            $category->update($request->only($category->getFillable()));
+
+            return response()->json(
+                $category,
+                200
+            );
+
+        } catch (Exception $e) {
+            return response()->json(
+                ["message" => "Error Processing Request!"],
+                500
+            );
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
+    public function destroyCategory($id)
     {
-        //
-    }
+        try {
+            $this->categoryRepo->delete($id);
+            return response()->json(["message" => "Deleted Successfuly"], 200);
+        } catch (Exception $e) {
+            return response()->json(
+                ["message" => "Error Processing Request!"],
+                500
+            );
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCategoryRequest $request, Category $category)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
-    {
-        //
     }
 }

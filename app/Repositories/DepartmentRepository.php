@@ -22,7 +22,7 @@ class DepartmentRepository implements DepartmentRepositoryInterface
     }
     public function update(array $data, $id)
     {
-        return Department::where('id','=',$id)->update($data);
+        return Department::where($id)->update($data);
     }
     public function delete($id)
     {

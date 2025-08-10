@@ -18,12 +18,11 @@ class SupplierController extends Controller
     public function __construct(SupplierRepositoryInterface $supplierRepo){
         $this->supplierRepo = $supplierRepo;
     }
+ 
     
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request)
     {
+
         try{
             $supplier = $this->supplierRepo->store(
                 data: [
@@ -40,14 +39,15 @@ class SupplierController extends Controller
             );
 
         }catch (JsonException $e){
-            return new JsonResponse(data: ["message" => "erro de insercao"]);
+            return new JsonResponse(data: ["message" => "Something Went Wrong"]);
         }
-        return response()->json(["message" => "fornecedor criado"], 200);
+        return response()->json(["message" => "Supplier created successfully"], 200);
     }
 
 
     public function getAllSupplier()
     {
+
         try{
             return response()->json( $this->supplierRepo->list(), 200);
         }catch(JsonException $e){
@@ -58,16 +58,16 @@ class SupplierController extends Controller
 
     public function getSupplier($id)
     {
+
         try{
             return response()->json($this->supplierRepo->getById($id), 200);
         }catch(JsonException $e){
-            return response()->json(data: ["massage" => 'Algo deu erro: $e' ]);
+            return response()->json(data: ["message" => 'Something Went Wrong: $e' ]);
         }
     }
 
-   /**
-     * Update the specified resource in storage.
-     */
+
+
     public function update(Request $request, $id)
     {
         try{
@@ -75,20 +75,18 @@ class SupplierController extends Controller
             $supplier->update($request->only($supplier->getFillable()));
             return response()->json($supplier, 200);
         }catch(JsonException $e){
-            return response()->json(data: ["massage" => 'Something Went Wrong: $e']);
+            return response()->json(data: ["message" => 'Something Went Wrong: $e']);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy($id)
     {
         try{
             $this->supplierRepo->delete($id);
-            return response()->json(["massage" => 'Supplier deleted Succefully'], 200);
+            return response()->json(["message" => 'Supplier deleted Succefully'], 200);
         }catch(JsonException $e){
-            return response()->json(data: ["massage" => 'Something Went Wrong: $e']);
+            return response()->json(data: ["message" => 'Something Went Wrong: $e']);
         }
     }
 }

@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap services.
-     */
+   
     public function boot(): void
     {
 

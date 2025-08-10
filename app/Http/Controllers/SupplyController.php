@@ -24,10 +24,7 @@ class SupplyController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
+    public function addSupply(StoreSupplyRequest $request)
     {
         try {
             $supplies = $this->supplyRepo->store(
@@ -45,15 +42,13 @@ class SupplyController extends Controller
             );
 
         } catch (JsonException $e) {
-            return new JsonResponse(data: ["massage" => "Something Went Wrong!"]);
+            return new JsonResponse(data: ["massage" => "Error Processing Request!"]);
         }
         return response()->json(["massage" => "Supply created Succefully!"], 200);
     }
 
 
-    /**
-     * Display the specified resource.
-     */
+
     public function getAllSupplies()
     {
 
@@ -75,10 +70,9 @@ class SupplyController extends Controller
         }
 
     }
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
+   
+
+    public function update(UpdateSupplyRequest $request, $id)
     {
 
         try {
@@ -94,9 +88,6 @@ class SupplyController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         try {
